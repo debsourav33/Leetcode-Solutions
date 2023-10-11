@@ -1,0 +1,28 @@
+class Solution {
+public:
+
+    vector<int> fullBloomFlowers(vector<vector<int>>& flowers, vector<int>& people) {
+      vector<int> st, endi, ret;
+      for(auto v: flowers){
+        st.push_back(v[0]);
+        endi.push_back(v[1]);
+      }
+
+      sort(st.begin(),st.end());
+      sort(endi.begin(),endi.end());
+
+      for(auto t: people){
+        //no. of flowers that started blooming before or at t (before/at = upper_bound)
+        int n1 = upper_bound(st.begin(),st.end(),t) - st.begin();
+
+        //no. of flowers that ended blooming before t (before = lower_bound)
+        int n2 = lower_bound(endi.begin(),endi.end(),t) - endi.begin();
+
+        //no. of flowers that started after and ended blooming before t
+        int ans = n1-n2;
+        ret.push_back(ans);
+      }
+
+      return ret;
+    }
+};
