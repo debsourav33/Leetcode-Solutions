@@ -7,7 +7,7 @@ public:
         int ans = 0;
         int collected = 0;
 
-        //leave first quarter (n/3) for Bob
+        //leave first quarter (n/3) for Bob 
         //for the last 2 quarters, start from the last (largest pile):
         //allocate it to Alice, you take the pile before it (immediate smaller)
         //repeat until you reach Bob's quarter
