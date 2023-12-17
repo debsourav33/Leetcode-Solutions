@@ -2,31 +2,41 @@ class Solution {
 public:
     int n;
     vector<int> a;
-    vector<vector<int>> dp;
+    vector<int> dp;
     int target = 0;
-
-    int can(int pos, int sum){
-      if(sum==target)  return 1;
-      if(sum>target || pos==n)  return 0;
-      
-      if(dp[pos][sum]!=-1)  return dp[pos][sum];
-
-      //2 options -> take the number or skip it
-      return dp[pos][sum] = can(pos+1, sum) || can(pos+1, sum+a[pos]);
-    }
 
     bool canPartition(vector<int>& nums) {
         n = nums.size();
         
         int sum = 0;
         for(auto u: nums)  sum += u;
-        
         if(sum%2)  return false;
         target = sum/2;
-        
-        dp = vector(n,vector(target+1,-1));
 
-        a = nums;
-        return can(0,0);
+        dp = vector(target+1,-1);
+
+        vector<int> sums = {0};
+
+        for(auto u: nums){  //for every element
+          vector<int> new_sums;
+          for(auto sum: sums){  //try adding to each of the previously achieved sum
+           
+           //2 options -> take it or don't
+           //case 1: take
+           int taken_sum = sum+u;
+           if(taken_sum > target)  continue;
+           if(dp[taken_sum]!=-1)  continue; //already achieved this sum
+           
+           dp[taken_sum] = 1;
+           new_sums.push_back(taken_sum);
+           
+           //case 2: don't take -> do nothing
+
+          }
+
+          for(auto s: new_sums)  sums.push_back(s);
+        }
+
+        return dp[target] == 1;
     }
 };
