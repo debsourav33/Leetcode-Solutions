@@ -1,63 +1,67 @@
 class Solution {
 public:
-    string s, t;
+    string s,t;
     int n1, n2;
-    int dp[1001][1001];
-    pair<int,int> nxt[1003][1003];
+    vector<vector<int>> dp;
+    vector<vector<vector<int>>> nxt;
+    
 
     int call(int p1, int p2){
-        if(p1==n1 && p2==n2)  return 0;
-        if(dp[p1][p2]!=-1)  return dp[p1][p2];
+      //boundary handled with if-else
+      //this is for easy construction of nxt array
 
-        if(p1==n1){
-            nxt[p1][p2] = make_pair(p1,p2+1);
-            return dp[p1][p2] = 1+call(p1,p2+1);
-        }
-        if(p2==n2){
-            nxt[p1][p2] = make_pair(p1+1,p2);
-            return dp[p1][p2] = 1+call(p1+1,p2);
-        }
+      if(n1==p1 && n2 == p2)  return 0;
 
-        if(s[p1]==t[p2]){
-            nxt[p1][p2] = make_pair(p1+1,p2+1);
-            return dp[p1][p2] = call(p1+1,p2+1) + 1;
-        }
+      auto &mem = dp[p1][p2];
+      auto &move = nxt[p1][p2];
 
-        int v1 = call(p1+1,p2), v2= call(p1, p2+1);
+      if(mem!=-1)  return mem;
 
-        if(v1<v2){
-            nxt[p1][p2] = make_pair(p1+1,p2);
-        }
-        else{
-            nxt[p1][p2] = make_pair(p1,p2+1);
-        }
-        return dp[p1][p2] = 1 + min(v1,v2);
+      if(p1<n1 && p2<n2 &&  s[p1]==t[p2]){
+        move = {p1+1,p2+1};
+        return mem = 1 + call(p1+1,p2+1);
+      }
+
+      int opt1 = p1<n1 ? 1 + call(p1+1,p2) : 1e9;
+      int opt2 = p2<n2 ? 1 + call(p1,p2+1) : 1e9;
+
+      if(opt1<opt2){
+        move = {p1+1,p2};
+        return mem = opt1;
+      }
+      else{
+        move = {p1,p2+1};
+        return mem = opt2;
+      }
     }
 
-    string construct(int p1, int p2, string res=""){
-        if(nxt[p1][p2]==make_pair(-1,-1)){
-            return res;
-        }
+    string super = "";
 
-        pair<int,int> p = nxt[p1][p2];
-        if(p.first!=p1)  res += s[p1];
-        else  res+= t[p2];
+    void print_path(int p1, int p2){
+      
+      if(p1==n1 && p2 == n2)  return;
 
-        return construct(p.first,p.second,res);
+      int new_p1 = nxt[p1][p2][0];
+      int new_p2 = nxt[p1][p2][1];
+
+      //cout<<new_p1<< " "<<new_p2<<endl; 
+
+      if(new_p1 > p1)  super += s[p1];
+      else if(new_p2 > p2)  super += t[p2];
+
+      print_path(new_p1,new_p2);
     }
 
     string shortestCommonSupersequence(string str1, string str2) {
-        memset(dp,-1,sizeof(dp));
-        for(int i=0;i<1002;i++){
-            for(int j=0;j<1002;j++){
-                nxt[i][j] = make_pair(-1,-1);
-            }
-        }
         s = str1, t = str2;
-        n1 = s.length();
-        n2 = t.length();
+        n1 = s.length(); n2 = t.length();
 
-        cout << call(0,0) <<endl;
-        return construct(0,0);
+        dp= vector(n1+1, vector(n2+1, -1));
+        nxt= vector(n1+1, vector(n2+1, vector(2,-1)));
+
+        call(0,0);
+        print_path(0,0);
+
+        return super;
     }
 };
