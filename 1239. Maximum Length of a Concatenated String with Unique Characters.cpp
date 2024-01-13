@@ -28,16 +28,17 @@ public:
       return cnt;
     }
 
-    void call(int pos, int mask){
+    //why add res parameter?
+    //to make it a tail-call recursion!
+    void call(int pos, int mask, int res){
+      maxi = max(res, maxi);
+      
       for(int i=pos;i<n;i++){
         //mask & v[i] > 0 means atleast 1 same character foind in v[i]
         if(mask & v[i])  continue;
 
-        call(i+1, mask | v[i]); //if not, take all the characters of v[i], set bit for them and proceed
+        call(i+1, mask | v[i], get1count(mask | v[i])); //if not, take all the characters of v[i], set bit for them and proceed
       }
-
-      int cnt = get1count(mask);
-      maxi = max(cnt, maxi);
     }
 
     
@@ -52,7 +53,7 @@ public:
 
         n = v.size();
 
-        call(0,0);
+        call(0,0,0);
 
         return maxi;
     }
