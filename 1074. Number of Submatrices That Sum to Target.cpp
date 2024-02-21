@@ -1,5 +1,5 @@
 /*
-Time Complexity: O(rows^2 * cols^2) = O(N^4)
+Time Complexity: O(rows * cols^2) = O(N^3)
 Memory Complexity: O(rows * cols)
 */
 
@@ -31,24 +31,27 @@ public:
       return endi - st;
     }
 
-    //From each row,
+    //O(n^3)
+    //From 0th row,
     //Use sliding window to find the sum from each column for each possible size
+    //When traversing row by row, Use map to store prefix sum for a pair of columns
     int solve(vector<vector<int>>& mat, int target){
       int ans = 0;
       int rows = mat.size(), cols = mat[0].size();
 
       for(int size=1; size<=cols; size++)
       {
-        for(int st = 0; st < rows; st++)
+        for(int i=0; i+size<=cols; i++)
         {
-          for(int i=0; i+size<=cols; i++)
+          int sum = 0;
+          unordered_map<int,int> m;
+          m[0] = 1;
+          for(int j=0;j<rows;j++)
           {
-            int sum = 0;
-            for(int j=st;j<rows;j++)
-            {
-              sum += get_range_sum(j, i, i+size-1);
-              if(sum == target)  ans++;
-            }
+            sum += get_range_sum(j, i, i+size-1);
+            int need = sum - target;
+            if(m.count(need))  ans += m[need];
+            m[sum]++;
           }
         }
       }
