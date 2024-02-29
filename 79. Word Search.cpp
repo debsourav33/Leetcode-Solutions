@@ -1,5 +1,6 @@
 /*
-Time: 4^(m*n) (branching factor = 4 for every cell)
+Time: 3^(l) (branching factor = 3 since we can't get back to parent neighbor, 
+we proceed as long as we find a match, which is highest l steps (l= word length))
 Space: m*n (for visited array)
 
 Recursively visit neighboring cells as long as the next character of board matches the next unmatched character in word
