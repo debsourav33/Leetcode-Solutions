@@ -9,14 +9,15 @@ public:
     As there's overlapping subproblem, store the intermediate result in a dp table
     */
 
-    unordered_map<long long,double> dp; 
-
     double bigPow(double x, long long n){
-        if(n==1)  return x;
-        if(dp.count(n))  return dp[n];
+        if(n==0)  return 1;
+        //if(dp.count(n))  return dp[n];
         
         double rem = (n%2==0) ? 1.0 : x; //x^5 = x^2 * x^2 * x
-        return dp[n] = bigPow(x, n/2) * bigPow(x, n/2) * rem;
+
+        //following 2 lines are equivalent of using dp table, return dp[n] = bigPow(x, n/2) * bigPow(x, n/2) * rem;
+        double res = bigPow(x, n/2); 
+        return res * res * rem;
     }
 
     double myPowIterative(double x, long long n){
@@ -40,17 +41,11 @@ public:
     }
 
     double myPow(double x, long long n) {
-        return myPowIterative(x, n);
-
-        /*
-        //edge case
-        if(n==0)  return 1;
+        //return myPowIterative(x, n);
 
         if(n<0)  x = 1/x;
         n = abs(n);
 
         return bigPow(x,n);
-        */
-        
     }
 };
