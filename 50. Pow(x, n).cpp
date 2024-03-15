@@ -1,55 +1,56 @@
 class Solution {
 public:
-    //Time: (log(n))^2
-    //Space: log(n) * log(n) = (log(n))^2
     /*
-    Approach: Use the exponential property of when 2 numbers with same base get multiplied, their exponet get added
-    So count the exponents in 2s powers (x^1, x^2, x^4) - simply by multiplying x^k with x^k = x^2k
-    stop when k it exceeds n
-    then use previous exponents to sum up to n
+    Time: (log(n))
+    Space: log(n) (recursive stack)
+    
+    Use bigmod approach of dividing the exponent in half in every recursive call
+    since, a^k = a^(k/2) * a^(k/2) 
+    As there's overlapping subproblem, store the intermediate result in a dp table
     */
-    double myPow(double x, int nn) {
-        bool positive = x >= 0 || (nn%2==0);
-        bool inverse = nn < 0;
 
-        if(nn==0)  return 1;
+    unordered_map<long long,double> dp; 
 
-        double n = nn;
+    double bigPow(double x, long long n){
+        if(n==1)  return x;
+        if(dp.count(n))  return dp[n];
         
+        double rem = (n%2==0) ? 1.0 : x; //x^5 = x^2 * x^2 * x
+        return dp[n] = bigPow(x, n/2) * bigPow(x, n/2) * rem;
+    }
 
-        if(x<0)  x *= -1;
-        if(n<0)  n *= -1;
+    double myPowIterative(double x, long long n){
+        //edge case
+        if(n==0)  return 1;
 
-        vector<double> pow = {1};
-        vector<double> val = {x};
-        
-        while(1){
-            double curr_val = val[val.size()-1];
-            double curr_p = pow[pow.size()-1];
+        if(n<0)  x = 1/x;
+        n = abs(n);
 
-            //cout<<curr_p<<" "<<curr_val<<endl;
+        double res = 1;
+        double exp = x;
 
-            if(curr_p == n)  break;
-            
-            for(int i=pow.size()-1;i>=0;i--){
-                double p = pow[i];
-                double v = val[i];
+        while(n>1){
+            if(n%2 == 1)  res *= exp; //do on paper - when exp^5 = exp^2 * exp^2 * exp (that's why for every odd, we multiply the current exp to res)
+            exp = exp*exp;
 
-                //multiplying numbers with same base but different exp = their exponents get added
-                //try from the highest exponent first (that will result in 2x the exponent)
-                if(curr_p + p <= n){
-                    pow.push_back(curr_p+p);
-                    val.push_back(curr_val*v);
-                    break;
-                }
-            }
+            n /= 2;
         }
 
-        double ans = val[val.size()-1];
-        ans = inverse ? 1.0/ans : ans;
+        return res * exp;
+    }
 
-        if(!positive) ans = -1 * ans;
-        return ans;
+    double myPow(double x, long long n) {
+        return myPowIterative(x, n);
 
+        /*
+        //edge case
+        if(n==0)  return 1;
+
+        if(n<0)  x = 1/x;
+        n = abs(n);
+
+        return bigPow(x,n);
+        */
+        
     }
 };
