@@ -1,0 +1,19 @@
+class Solution {
+public:
+    vector<int> findDuplicates(vector<int>& nums) {
+        vector<int> ret;
+        for(int i=0;i<nums.size();i++){
+            //use the value as index
+            int val = abs(nums[i]);
+            if(nums[val-1] < 0){ //if the index is already negative, that value is encountered before
+                ret.push_back(val);
+            }
+            else{
+                nums[val-1] *= -1; //else, that value is not encountered before, mark the index as negative
+            }
+            
+        }
+
+        return ret;
+    }
+};
