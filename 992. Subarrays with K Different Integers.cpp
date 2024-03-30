@@ -7,11 +7,9 @@ For every index i,
 1. we will find the left-most index left, so that the window [left to i] contains k unique elements
 2. we will find the left-most index right, so that the window [right to i] contains k-1 unique elements
 
-that means, all subarrays ending in index i, and starting from indices [0 ... left] will have k unique elements
-and         all subarrays ending in index i, and starting from indices [0 ... right] will have k-1 unique elements
+that means, all subarrays ending in index i, and starting from indices [left ... right] will have k unique elements
 
--> which implies all subarrays ending in index i, and starting from indices [left ... right] will have k unique elements
-so, add left-right to the answer
+so, add (right-left) to the answer
 */
 
 class Solution {
