@@ -10,11 +10,9 @@ Greedy:
 */
 class Solution {
 public:
-    int jump(vector<int>& nums) {
+    int canJump(vector<int>& nums) {
         int n = nums.size();
         int curr = 0;
-
-        int jumps = 0;
 
         while(curr < n-1){
             int max_idx = curr; //which cell within current jump range has the furthest jumping capacity?
@@ -28,11 +26,10 @@ public:
                 }
             }
 
-            if(max_idx == curr)  return -1; //no more cell reachable
+            if(max_idx == curr)  return false; //no more cell reachable
             curr = max_idx; //we jump to the best cell
-            jumps++;
         }
 
-        return jumps;
+        return true;
     }
 };
