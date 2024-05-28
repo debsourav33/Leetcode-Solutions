@@ -2,11 +2,12 @@
 Time: O(n)
 Space: O(1)
 
-2 pointer (Expand-Window): 
+2 pointer (Squeeze-Window): 
 Maintain left and right
 
-Try to expand right as long as the elements inside (left to right) boundary has exchange cost <= maxCost
-When we update left, remove the cost associated with prev left
+Keep adding the cost for right = 0 to n-1 in each iteration
+and squeeze window from left as long as the cost exceeds maxCost
+If the cost is <= maxCost, then the window is a valid one!
 */
 
 class Solution {
@@ -17,22 +18,16 @@ public:
         int ans = 0;
         int cost = 0;
 
-        int right = 0;
-        for(int left=0; left<n; left++){ //left is only for removal, right for expansion
+        int left = 0;
+        for(int right=0; right<n; right++){ 
+            cost += abs(s[right] - t[right]);
 
-            while(right<n && cost <= maxCost){ //as long as the cost doesn't exceed maxCost
-                cost += abs(s[right] - t[right]);
-                right++;
-
-                if(cost <= maxCost){ //if the cost in this boundary still inside maxCost
-                    ans = max(ans, right-left);
-                }
-                else{
-                    break;
-                }
+            while(cost > maxCost){ //we have to squeeze window from left as long as the cost exceeds maxCost
+                cost -= abs(s[left] - t[left]);
+                left++;    
             }
 
-            cost -= abs(s[left] - t[left]); //before next iteration, remove the cost associated with current left
+            ans = max(ans, right-left+1);
         }
         
 
