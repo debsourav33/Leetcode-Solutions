@@ -1,6 +1,6 @@
 /*
 TC: O(NLog(Max(Bloom))
-SC: O(N)
+SC: O(1)
 
 Binary search over maximum value in bloom array and check how less we can get away with
 */
@@ -10,17 +10,10 @@ public:
 
     //funtion that takes an x number of days and checks if we can make m boutiques in x days
     bool can(int x, vector<int>& bloom, int m, int k){
-        vector<bool> v;
-        for(auto d: bloom){
-            v.push_back(x >= d);
-            //cout<<v[v.size()-1]<<" ";
-        } 
-        cout<<endl;
-
         int streak = 0;
 
-        for(auto val: v){
-            if(val)  streak++;
+        for(auto d: bloom){
+            if(x >= d)  streak++;
             else  streak = 0; //reset streak
 
             if(streak == k){ //a boutique constructed!
