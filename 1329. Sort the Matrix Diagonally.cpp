@@ -2,11 +2,9 @@
 Time: O(n*mlog(n*m))
 Space: O(n*m)
 
-
 The idea is, if two elements belong to the same main diagonal (top-left to bottom-right),
 their r-c will be same (where r is the row and c is the column number)
 */
-
 
 class Solution {
 public:
